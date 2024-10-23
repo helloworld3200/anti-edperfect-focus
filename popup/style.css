@@ -1,0 +1,51 @@
+body {
+    min-width: 30em;
+    background-color: #242424;
+    color: rgb(224, 222, 222);
+    font-size: 0.9em;
+}
+
+hr {
+    color: #a7a7a7;
+}
+
+h1 {
+    font-size: 1.5em;
+    font-weight: 1em;
+}
+
+.options {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1em;
+    align-items: center;
+    font-size: 1.2em;
+}
+
+.description {
+    font-size: 1.2em;
+    font-weight: 0.5em;
+}
+
+.credits {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.version {
+    font-style: italic;
+    color: #b8b7b7;
+    font-size: 1.2em;
+}
+
+.author {
+    color: #b8b7b7;
+    margin-left: auto;
+    font-size: 1.2em;
+}
+
+.author-link {
+    color: #b8b7b7;
+}
