@@ -7,9 +7,15 @@
       "default_popup": "popup/control.html",
       "default_icon": "imgs/anti-ep-focus-logo.png"
     },
-    "js": ["content-scripts/anti-focus-script.js"],
-    "matches": [
-      "https://app.educationperfect.com/*"
+    "content-scripts": [
+      {
+        "matches": [
+          "https://app.educationperfect.com/*"
+        ],
+        "js": [
+          "content-scripts/anti-focus-script.js"
+        ]
+      }
     ],
     "permissions": [
       "storage"

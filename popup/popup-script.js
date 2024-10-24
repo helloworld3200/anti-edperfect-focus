@@ -1,12 +1,22 @@
 // Adds interactivity for the UI in the popup
 // by helloworld3200 on github (MIT License 2024)
 
+const vals = {
+    storeKeys: {
+        enabled: "enabled"
+    }
+};
+
 function onCheckboxClick(checkbox) {
     // Save the state of the checkbox to the storage
     if (checkbox.checked) {
-        chrome.storage.sync.set({ "enabled": true });
+        chrome.storage.local.set({ [vals.storeKeys.enabled] : true }).then(() => {
+            console.log("Storage key enabled set to true");
+        });
     } else {
-        chrome.storage.sync.set({ "enabled": false });
+        chrome.storage.local.set({ [vals.storeKeys.enabled] : false }).then(() => {
+            console.log("Storage key enabled set to false");
+        });
     }
 }
 
@@ -15,7 +25,7 @@ function main () {
     const checkbox = document.getElementById("enabled");
 
     // Get the current state of the extension from storage
-    chrome.storage.sync.get("enabled", (result) => {
+    chrome.storage.local.get([vals.storeKeys.enabled]).then((result) => {
         // Set the checkbox to the state of the extension
         checkbox.checked = result.enabled;
     });
