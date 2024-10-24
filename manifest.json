@@ -7,7 +7,7 @@
       "default_popup": "popup/control.html",
       "default_icon": "imgs/anti-ep-focus-logo.png"
     },
-    "content-scripts": [
+    "content_scripts": [
       {
         "matches": [
           "https://app.educationperfect.com/*"
@@ -17,6 +17,9 @@
         ]
       }
     ],
+    "background": {
+      "service_worker": "service-workers/background-script.js"
+    },
     "permissions": [
       "storage"
     ]

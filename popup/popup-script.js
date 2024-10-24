@@ -29,6 +29,10 @@ function main () {
         // Set the checkbox to the state of the extension
         checkbox.checked = result.enabled;
     });
+
+    checkbox.addEventListener("change", (event) => {
+        onCheckboxClick(event.currentTarget);
+    })
 }
 
 main();
