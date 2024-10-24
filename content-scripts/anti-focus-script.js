@@ -14,41 +14,61 @@ const vals = {
     storeKeys: {
         enabled: "enabled"
     }
+};
+
+function setGetter (source, object, getter) {
+    // Sets the getter of an object to a function
+    Object.defineProperty(source, object, {
+        get: getter,
+        configurable: true
+    });
+}
+
+function setAllGetters (object, getter) {
+    // Sets the getter of an object to a function
+    setGetter(document, object, getter);
+    setGetter(window, object, getter);
 }
 
 function setUndefinedGetter (object = vals.hiddenProperty) {
     // Sets the getter of an object to undefined
-    Object.defineProperty(document, object, {
-        get: undefined,
-        configurable: true
-    });
+    setAllGetters(object, undefined);
     console.log(object, 'getter set to undefined');
 }
 
 function setStateGetter (object = vals.hiddenProperty, state = vals.hiddenState) {
     // Sets the getter of an object to a constant value
-    Object.defineProperty(document, object, {
-        get: function () {
-            console.log(object, 'getter called, returning', state);
-            return state;
-        },
-        configurable: true
+    setAllGetters(object, () => {
+        console.log(object, 'getter called, returning', state);
+        return state;
     });
+    
     console.log(object, 'getter set to', state);
 }
 
 function stopPropagation (event) {
+    event.stopPropagation();
     event.stopImmediatePropagation();
     event.preventDefault();
     console.log(event.type, 'event blocked');
+}
+
+function addEventListenerToAll (event, listener, capture = true) {
+    document.addEventListener(event, listener, capture);
+    window.addEventListener(event, listener, capture);
+}
+
+function removeEventListenerToAll (event, listener, capture = true) {
+    document.removeEventListener(event, listener, capture);
+    window.removeEventListener(event, listener, capture);
 }
 
 function blockFocusPopup () {
     setStateGetter();
     setStateGetter(vals.visibilityStateProperty, vals.visibleState);
 
-    document.addEventListener(vals.visibilityChangeEvent, stopPropagation, true);
-    document.addEventListener(vals.webkitVisibilityChangeEvent, stopPropagation, true);
+    addEventListenerToAll(vals.visibilityChangeEvent, stopPropagation);
+    addEventListenerToAll(vals.webkitVisibilityChangeEvent, stopPropagation);
 
     console.log('Focus popup blocked');
 }
@@ -58,8 +78,8 @@ function removeBlock () {
     setUndefinedGetter();
     setUndefinedGetter(vals.visibilityStateProperty);
 
-    document.removeEventListener(vals.visibilityChangeEvent, stopPropagation, true);
-    document.removeEventListener(vals.webkitVisibilityChangeEvent, stopPropagation, true);
+    removeEventListenerToAll(vals.visibilityChangeEvent, stopPropagation, true);
+    removeEventListenerToAll(vals.webkitVisibilityChangeEvent, stopPropagation, true);
 
     console.log('Block removed');
 }
@@ -75,19 +95,27 @@ function setupBlock () {
     });
 }
 
-function setupTests () {
-    document.addEventListener(vals.visibilityChangeEvent, (event) => {
+function addVisibilityChangeTest () {
+    addEventListenerToAll(vals.visibilityChangeEvent, (event) => {
         console.log('VISIBILITY CHANGE EVENT FIRED!!!! FAILED TO BLOCK');
-    });
+    }, false);
+}
+
+function setupTests () {
+    addVisibilityChangeTest();
 }
 
 function main () {
+    console.log('ANTI-FOCUS SCRIPT BEGIN');
+
     chrome.storage.onChanged.addListener((changes, namespace) => {
         setupBlock();
     });
 
     setupBlock();
     setupTests();
+
+    console.log('ANTI-FOCUS SCRIPT END');
 }
 
 main();
